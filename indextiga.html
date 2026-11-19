@@ -1,0 +1,574 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Italian Studio | Daily Learning</title>
+<style>
+:root{
+  --bg:#f5f8f4;--paper:#fff;--mint:#d9eee3;--green:#a8cdb8;
+  --blue:#dceafa;--lav:#ece7f8;--pink:#f7e6e8;
+  --ink:#344b40;--muted:#87968d;--line:#e8eee9;
+  --accent:#638d76;--shadow:0 10px 30px #536f5b12;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font-family:Inter,"Trebuchet MS",Arial,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.app{display:grid;grid-template-columns:235px 1fr;min-height:100vh}
+aside{background:#fff;border-right:1px solid var(--line);padding:28px 18px;position:sticky;top:0;height:100vh}
+.brand{font-size:21px;font-weight:800;color:var(--accent);padding:4px 10px 28px}
+.brand span{display:block;font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:5px}
+.nav-label{font-size:10px;letter-spacing:1.6px;color:#a3afa7;margin:20px 10px 9px}
+.nav button{display:flex;width:100%;padding:12px 13px;margin:4px 0;
+border-radius:12px;background:transparent;color:#64776c;text-align:left;gap:12px}
+.nav button.active,.nav button:hover{background:#eaf4ed;color:#426b55}
+main{padding:32px clamp(18px,4vw,54px);max-width:1250px;width:100%;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
+.eyebrow{font-size:11px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
+h1{font-size:clamp(26px,4vw,36px);margin:7px 0;color:#405e4c}
+h2{font-size:20px;margin:0 0 14px}
+h3{font-size:16px;margin:0 0 8px}
+p{line-height:1.65}
+.date{background:#fff;padding:11px 15px;border-radius:30px;color:#718278;font-size:12px}
+.hero{background:linear-gradient(120deg,#e2f2e8,#e7effb);border-radius:24px;padding:27px;margin-bottom:20px}
+.hero h2{font-size:23px;margin-bottom:7px}
+.hero p{margin:0;color:#718579}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.card{background:var(--paper);padding:22px;border-radius:20px;box-shadow:var(--shadow);margin-bottom:17px}
+.statrow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.big{font-size:27px;font-weight:800;color:#567b64}
+.muted,.small{color:var(--muted);font-size:12px;line-height:1.6}
+.progress{height:9px;border-radius:20px;background:#edf1ed;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:linear-gradient(90deg,#9bcbb0,#a9c9e9);width:0%;transition:.3s}
+.task{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border:0}
+.task input{accent-color:#6d9c7e;width:17px;height:17px}
+.task-info{flex:1}
+.task-info small{display:block;color:var(--muted);margin-top:3px}
+.pill{display:inline-block;padding:6px 10px;border-radius:30px;background:var(--mint);font-size:10px;letter-spacing:.7px;color:#547663}
+.pill.blue{background:var(--blue)}.pill.pink{background:var(--pink)}.pill.lav{background:var(--lav)}
+.btn{background:#dceee2;color:#41684f;padding:10px 15px;border-radius:11px;font-weight:700;font-size:13px;margin:4px 4px 4px 0}
+.btn.secondary{background:#eef2ef;color:#65776b}
+.btn.dark{background:#668e76;color:white}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.timer{font-size:32px;font-weight:800;letter-spacing:1px;color:#567b64;margin:12px 0}
+.view{display:none}.view.active{display:block}
+.prompt{background:#f5f9f6;padding:16px;border-radius:14px;margin:13px 0;line-height:1.7}
+textarea,input[type=text]{width:100%;border:1px solid #e1eae3;background:#fcfefd;border-radius:12px;padding:13px;color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+.video-frame{width:100%;aspect-ratio:16/9;border:0;border-radius:15px;background:#edf3ef}
+.video-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.video-choice{background:#f5f8f6;border:1px solid var(--line);border-radius:13px;padding:13px;text-align:left;color:var(--ink)}
+.video-choice.selected{border:2px solid #8bb79a;background:#edf7f0}
+.word-card{border:1px solid var(--line);border-radius:15px;padding:15px;background:#fbfdfb}
+.word{font-size:22px;font-weight:800;color:#527d61}
+.word-meta{font-size:11px;color:var(--muted);margin:5px 0 10px}
+.word-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.result{border-radius:13px;padding:14px;background:#f3f8f4;margin-top:13px;line-height:1.7}
+.issue{padding:10px 0;border-bottom:1px solid #e5ece7;font-size:13px}
+.good{color:#4d8762}.warn{color:#a4773b}
+.assignment{margin-top:18px;border-top:1px solid var(--line);padding-top:17px}
+.assignment input{margin:5px 0}
+.book-text{font-family:Georgia,serif;font-size:19px;line-height:2;background:#f7faf7;padding:18px;border-radius:14px}
+.clickword{color:#478264;text-decoration:underline dotted;cursor:pointer}
+footer{text-align:center;padding:30px;color:#9aa79e;font-size:11px}
+@media(max-width:760px){
+ .app{display:block}aside{height:auto;position:relative;padding:13px}
+ .brand{padding:4px 8px 10px}.nav{display:flex;overflow-x:auto;gap:5px}
+ .nav-label{display:none}.nav button{white-space:nowrap;width:auto;padding:10px}
+ main{padding:22px 15px}.grid{grid-template-columns:1fr}
+ .video-list{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand">🍃 Italian Studio<span>IL TUO SPAZIO DI STUDIO</span></div>
+  <div class="nav-label">STUDY SPACE</div>
+  <nav class="nav">
+    <button class="active" data-view="dashboard">🏡 Dashboard</button>
+    <button data-view="speaking">🗣️ Speaking</button>
+    <button data-view="listening">🎧 Listening</button>
+    <button data-view="reading">📖 Reading</button>
+    <button data-view="writing">✍️ Writing</button>
+    <button data-view="vocabulary">🌱 New words</button>
+    <button data-view="review">📝 My submissions</button>
+  </nav>
+  <div class="nav-label">YOUR DAILY GOAL</div>
+  <div class="small" style="padding:0 10px">65 minutes a day<br>Piccoli passi, grandi progressi.</div>
+</aside>
+
+<main>
+  <div class="top">
+    <div><div class="eyebrow">IL TUO PERCORSO · A1–A2</div><h1 id="pageTitle">Buongiorno! 🌷</h1></div>
+    <div class="date" id="today"></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section class="view active" id="dashboard">
+    <div class="hero">
+      <span class="pill">YOUR ITALIAN JOURNEY</span>
+      <h2>Un passo alla volta.</h2>
+      <p>Belajar bahasa Italia sedikit demi sedikit, setiap hari.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="eyebrow">DAILY PROGRESS</div>
+        <div class="statrow"><h2>Today's sessions</h2><div class="big" id="progressNumber">0/4</div></div>
+        <div class="progress"><div id="progressBar"></div></div>
+        <div class="small" id="progressMessage">Mulai sesi pertamamu hari ini.</div>
+      </div>
+      <div class="card">
+        <div class="eyebrow">STUDY TIME</div>
+        <h2>65 minutes</h2>
+        <p class="small">15 menit speaking · 20 menit listening · 15 menit reading · 10 menit writing.</p>
+        <span class="pill blue">A1–A2 ROUTINE</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Il tuo programma</h2>
+      <div id="dashboardTasks"></div>
+    </div>
+    <div class="card">
+      <h2>✨ Today's new words</h2>
+      <div class="word-grid" id="dashboardWords"></div>
+      <button class="btn" onclick="showView('vocabulary')">Explore vocabulary →</button>
+    </div>
+  </section>
+
+  <!-- SPEAKING -->
+  <section class="view" id="speaking">
+    <span class="pill">01 · SPEAKING · 15 MIN</span>
+    <h2 style="margin-top:14px">Parla italiano!</h2>
+    <p class="small">Baca prompt, ucapkan jawaban dengan suara, lalu kerjakan mini assignment.</p>
+    <div class="card">
+      <div class="eyebrow">SPEAKING PROMPT</div>
+      <h2 id="verbPrompt">Parla della tua giornata.</h2>
+      <div class="prompt" id="speakingHint">Ceritakan kegiatanmu hari ini menggunakan verba sederhana.</div>
+      <button class="btn" onclick="newSpeaking()">New prompt ↗</button>
+      <div class="timer" id="speakingTimer">15:00</div>
+      <button class="btn dark" onclick="startTimer('speaking',15)">Start</button>
+      <button class="btn secondary" onclick="pauseTimer('speaking')">Pause</button>
+      <button class="btn secondary" onclick="resetTimer('speaking',15)">Reset</button>
+    </div>
+    <div class="card assignment">
+      <h2>✏️ Speaking mini assignment</h2>
+      <p class="small">Pilih tiga kata atau verba dari sesi speaking. Buat satu kalimat untuk setiap kata.</p>
+      <div id="speakingWords"></div>
+      <button class="btn dark" onclick="submitAssignment('speaking')">Submit & check</button>
+      <div id="speakingResult"></div>
+    </div>
+  </section>
+
+  <!-- LISTENING -->
+  <section class="view" id="listening">
+    <span class="pill blue">02 · LISTENING · 20 MIN</span>
+    <h2 style="margin-top:14px">Ascolta attentamente 🎧</h2>
+    <p class="small">Pilih materi dari Easy Italian atau Coffee Break Italian.</p>
+    <div class="card">
+      <div class="statrow"><h2 id="videoTitle">Super Easy Italian · Beginner playlist</h2><span class="pill blue" id="videoSource">EASY ITALIAN</span></div>
+      <iframe class="video-frame" id="videoPlayer" src="https://www.youtube-nocookie.com/embed/videoseries?list=PLA5UloabheFMEc7nbvg9O7wHcpBa3_pTV&index=1" title="Italian learning video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <p class="small" id="videoDescription">Video untuk pembelajar pemula. Gunakan subtitle Italia jika tersedia.</p>
+      <div class="video-list" id="videoList"></div>
+      <div style="margin-top:12px">
+        <a id="externalVideo" href="https://www.youtube.com/@EasyItalian" target="_blank" rel="noopener">Buka kanal resmi ↗</a>
+      </div>
+      <div class="timer" id="listeningTimer">20:00</div>
+      <button class="btn dark" onclick="startTimer('listening',20)">Start</button>
+      <button class="btn secondary" onclick="pauseTimer('listening')">Pause</button>
+      <button class="btn secondary" onclick="resetTimer('listening',20)">Reset</button>
+    </div>
+    <div class="card assignment">
+      <h2>✏️ Listening mini assignment</h2>
+      <p class="small">Catat tiga kata atau verba yang kamu dengar. Buat kalimat baru dengan masing-masing kata.</p>
+      <div id="listeningWords"></div>
+      <button class="btn dark" onclick="submitAssignment('listening')">Submit & check</button>
+      <div id="listeningResult"></div>
+    </div>
+  </section>
+
+  <!-- READING -->
+  <section class="view" id="reading">
+    <span class="pill pink">03 · READING · 15 MIN</span>
+    <h2 style="margin-top:14px">Leggiamo insieme 📖</h2>
+    <div class="card">
+      <div class="eyebrow">CLASSIC ITALIAN LITERATURE</div>
+      <h2 id="bookTitle">Le avventure di Pinocchio</h2>
+      <p class="small" id="bookAuthor">Carlo Collodi · testo originale</p>
+      <div class="book-text" id="bookText"></div>
+      <div class="result" id="wordMeaning">Klik kata berwarna hijau untuk melihat arti.</div>
+      <button class="btn" onclick="nextBook()">Another book →</button>
+      <a id="bookLink" href="https://www.gutenberg.org/ebooks/52484" target="_blank" rel="noopener">Buka teks lengkap ↗</a>
+      <p class="small">Karya klasik asli bisa lebih sulit daripada A1–A2. Tautan sumber disediakan agar kamu bisa membaca konteks lengkapnya.</p>
+      <div class="timer" id="readingTimer">15:00</div>
+      <button class="btn dark" onclick="startTimer('reading',15)">Start</button>
+      <button class="btn secondary" onclick="pauseTimer('reading')">Pause</button>
+      <button class="btn secondary" onclick="resetTimer('reading',15)">Reset</button>
+    </div>
+    <div class="card assignment">
+      <h2>✏️ Reading mini assignment</h2>
+      <p class="small">Ambil tiga kata atau verba dari bacaan, lalu gunakan dalam kalimat buatanmu sendiri.</p>
+      <div id="readingWords"></div>
+      <button class="btn dark" onclick="submitAssignment('reading')">Submit & check</button>
+      <div id="readingResult"></div>
+    </div>
+  </section>
+
+  <!-- WRITING -->
+  <section class="view" id="writing">
+    <span class="pill lav">04 · WRITING · 10 MIN</span>
+    <h2 style="margin-top:14px">Scrivi in italiano ✍️</h2>
+    <div class="card">
+      <div class="eyebrow">TODAY'S WRITING PROMPT</div>
+      <h2 id="writingPrompt">Descrivi la tua giornata.</h2>
+      <button class="btn" onclick="newWritingPrompt()">Change topic ↗</button>
+      <textarea id="writingText" placeholder="Ciao! Oggi mi sveglio alle..."></textarea>
+      <div class="timer" id="writingTimer">10:00</div>
+      <button class="btn dark" onclick="startTimer('writing',10)">Start</button>
+      <button class="btn secondary" onclick="pauseTimer('writing')">Pause</button>
+      <button class="btn secondary" onclick="resetTimer('writing',10)">Reset</button>
+      <button class="btn dark" onclick="submitWriting()">Submit writing & check</button>
+      <div id="writingResult"></div>
+    </div>
+  </section>
+
+  <!-- VOCABULARY -->
+  <section class="view" id="vocabulary">
+    <span class="pill">VOCABULARY LIBRARY</span>
+    <h2 style="margin-top:14px">Parole nuove 🌱</h2>
+    <p class="small">Kata dipilih acak dari kumpulan kosakata. Setiap kata bisa dicek di Wiktionary Italia. Sistem mengacak ulang tanpa mengulang sampai satu putaran selesai.</p>
+    <div class="card">
+      <div class="statrow"><h2>Today's words</h2><span class="pill blue" id="wordCounter">Set 1</span></div>
+      <div class="word-grid" id="vocabGrid"></div>
+      <button class="btn dark" onclick="newWordSet()">New words ↗</button>
+      <button class="btn secondary" onclick="showSavedWords()">Review saved words</button>
+      <div id="savedWords" class="small"></div>
+      <p class="small">Arti ringkas tersedia sebagai bantuan awal. Klik "Dictionary" untuk membuka definisi kamus Italia yang lebih lengkap.</p>
+    </div>
+  </section>
+
+  <!-- REVIEW -->
+  <section class="view" id="review">
+    <span class="pill lav">MY SUBMISSIONS</span>
+    <h2 style="margin-top:14px">Il mio quaderno 📝</h2>
+    <p class="small">Riwayat tugas dan hasil pemeriksaan tersimpan di browser ini.</p>
+    <div class="card" id="submissionHistory">Belum ada tugas yang dikumpulkan.</div>
+  </section>
+
+  <footer>ITALIAN STUDIO · PIANO PIANO SI VA LONTANO 🌿</footer>
+</main>
+</div>
+
+<script>
+// NAVIGATION
+const titles={dashboard:"Buongiorno! 🌷",speaking:"Speaking practice",listening:"Listening room",reading:"Reading corner",writing:"Writing studio",vocabulary:"Vocabulary garden",review:"My submissions"};
+function showView(id){
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+ document.getElementById("pageTitle").textContent=titles[id];
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>showView(b.dataset.view));
+document.getElementById("today").textContent=new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long"});
+
+// DAILY PROGRESS
+const tasks=["speaking","listening","reading","writing"];
+let completed=JSON.parse(localStorage.getItem("italianDone")||"{}");
+const todayKey=new Date().toDateString();
+if(completed.date!==todayKey) completed={date:todayKey};
+function updateProgress(){
+ const count=tasks.filter(t=>completed[t]).length;
+ document.getElementById("progressNumber").textContent=count+"/4";
+ document.getElementById("progressBar").style.width=(count*25)+"%";
+ document.getElementById("progressMessage").textContent=count===4?"Complimenti! Semua sesi selesai 🎉":count+" sesi selesai. Continua così!";
+ document.getElementById("dashboardTasks").innerHTML=tasks.map((t,i)=>`
+ <div class="task"><input type="checkbox" ${completed[t]?"checked":""} onchange="toggleDone('${t}',this.checked)">
+ <div class="task-info"><b>${["Speaking","Listening","Reading","Writing"][i]}</b><small>${[15,20,15,10][i]} menit · ${completed[t]?"Completed":"Not completed"}</small></div></div>`).join("");
+ localStorage.setItem("italianDone",JSON.stringify(completed));
+}
+function toggleDone(t,v){completed[t]=v;updateProgress()}
+function markDone(t){completed[t]=true;updateProgress()}
+
+// TIMERS
+let timerState={};
+function renderTimer(n){
+ let s=timerState[n].seconds;
+ document.getElementById(n+"Timer").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+}
+function startTimer(n,m){
+ if(!timerState[n])timerState[n]={seconds:m*60,interval:null};
+ if(timerState[n].interval)return;
+ if(timerState[n].seconds<=0)timerState[n].seconds=m*60;
+ timerState[n].interval=setInterval(()=>{
+  timerState[n].seconds--;renderTimer(n);
+  if(timerState[n].seconds<=0){
+   clearInterval(timerState[n].interval);timerState[n].interval=null;
+   markDone(n);alert("Sesi "+n+" selesai! Bravissima! 🌷");
+  }
+ },1000);
+}
+function pauseTimer(n){if(timerState[n]?.interval){clearInterval(timerState[n].interval);timerState[n].interval=null}}
+function resetTimer(n,m){pauseTimer(n);timerState[n]={seconds:m*60,interval:null};renderTimer(n)}
+
+// SPEAKING PROMPTS
+const speakPrompts=[
+ ["Parla della tua giornata.","Gunakan setidaknya tiga verba kegiatan sehari-hari."],
+ ["Descrivi la tua famiglia.","Coba gunakan kata sifat dan possessive."],
+ ["Che cosa fai nel tempo libero?","Ceritakan hobimu dengan kalimat sederhana."],
+ ["Descrivi il tuo posto preferito.","Gunakan preposisi tempat seperti in, a, vicino a."],
+ ["Che cosa mangi a colazione?","Gunakan nama makanan dan artikel yang tepat."]
+];
+function newSpeaking(){
+ let p=speakPrompts[Math.floor(Math.random()*speakPrompts.length)];
+ document.getElementById("verbPrompt").textContent=p[0];
+ document.getElementById("speakingHint").textContent=p[1];
+}
+
+// VIDEO LIBRARY
+// Playlist Easy Italian dan satu video resmi Coffee Break Italian.
+// Playlist index berpindah ke video berikutnya di dalam playlist.
+const videos=[
+ {title:"Super Easy Italian · Beginner playlist",source:"EASY ITALIAN",type:"playlist",
+  url:"https://www.youtube-nocookie.com/embed/videoseries?list=PLA5UloabheFMEc7nbvg9O7wHcpBa3_pTV&index=1",
+  link:"https://www.youtube.com/playlist?list=PLA5UloabheFMEc7nbvg9O7wHcpBa3_pTV",
+  desc:"Playlist Super Easy Italian untuk pembelajar A1–A2."},
+ {title:"Easy Italian · Official channel",source:"EASY ITALIAN",type:"channel",
+  url:"https://www.youtube-nocookie.com/embed/videoseries?list=UUhpDG_WQkf_2tgLUr9xTR0g",
+  link:"https://www.youtube.com/@EasyItalian/videos",
+  desc:"Video dari kanal Easy Italian. Pilih video di playlist atau buka kanal resminya."},
+ {title:"Coffee Break Italian · Course introduction",source:"COFFEE BREAK ITALIAN",type:"video",
+  url:"https://www.youtube-nocookie.com/embed/A58MoZWtwAI",
+  link:"https://www.youtube.com/watch?v=A58MoZWtwAI",
+  desc:"Video pengenalan resmi Coffee Break Italian. Untuk pelajaran Level 1, kunjungi halaman podcast/kursus resminya."},
+ {title:"Coffee Break Italian · Free Level 1 lessons",source:"COFFEE BREAK ITALIAN",type:"audio",
+  url:"",
+  link:"https://shows.acast.com/coffeebreakitalian",
+  desc:"Episode podcast Level 1 untuk pemula. Ini materi audio, bukan video tertanam."}
+];
+let selectedVideo=0;
+function chooseVideo(i){
+ selectedVideo=i;const v=videos[i];
+ document.getElementById("videoTitle").textContent=v.title;
+ document.getElementById("videoSource").textContent=v.source;
+ document.getElementById("videoDescription").textContent=v.desc;
+ document.getElementById("externalVideo").href=v.link;
+ document.getElementById("externalVideo").textContent=v.type==="audio"?"Dengarkan episode podcast ↗":"Buka sumber resmi ↗";
+ const frame=document.getElementById("videoPlayer");
+ if(v.url){frame.src=v.url;frame.style.display="block"}
+ else{frame.src="about:blank";frame.style.display="none"}
+ document.querySelectorAll(".video-choice").forEach((b,j)=>b.classList.toggle("selected",j===i));
+}
+function renderVideoList(){
+ document.getElementById("videoList").innerHTML=videos.map((v,i)=>`
+ <button class="video-choice ${i===0?"selected":""}" onclick="chooseVideo(${i})">
+ <span class="eyebrow">${v.source}</span><br><b>${v.title}</b><br><span class="small">${v.type==="audio"?"Podcast audio":"Video / playlist"}</span></button>`).join("");
+}
+renderVideoList();
+
+// BOOK READING: short original public-domain passages
+const books=[
+ {title:"Le avventure di Pinocchio",author:"Carlo Collodi · 1883",url:"https://www.gutenberg.org/ebooks/52484",
+  lines:["C'era una volta un pezzo di legno.","Non era un legno di lusso, ma un semplice pezzo da catasta."]},
+ {title:"Lezioni e Racconti per i bambini",author:"Ida Baccini · 1882",url:"https://www.gutenberg.org/ebooks/17805",
+  lines:["La mamma racconta una storia.","I bambini ascoltano con attenzione."]},
+ {title:"Alice nel Paese delle Meraviglie",author:"Lewis Carroll · edizione italiana",url:"https://www.gutenberg.org/ebooks/22625",
+  lines:["Alice cominciava a sentirsi molto stanca.","Senza far nulla, guardava intorno a sé."]}
+];
+const gloss={
+ "c'era":"ada / dahulu ada","una":"sebuah","volta":"waktu","un":"sebuah","pezzo":"potongan","di":"dari","legno":"kayu",
+ "non":"tidak","era":"adalah / dulu","ma":"tetapi","semplice":"sederhana","da":"untuk","catasta":"tumpukan kayu",
+ "la":"sang / itu","mamma":"ibu","racconta":"menceritakan","storia":"cerita","i":"para","bambini":"anak-anak",
+ "ascoltano":"mendengarkan","con":"dengan","attenzione":"perhatian","alice":"Alice","cominciava":"mulai",
+ "a":"untuk","sentirsi":"merasa","molto":"sangat","stanca":"lelah","senza":"tanpa","far":"melakukan","nulla":"apa pun"
+};
+let bookIndex=0;
+function renderBook(){
+ let b=books[bookIndex];document.getElementById("bookTitle").textContent=b.title;
+ document.getElementById("bookAuthor").textContent=b.author;
+ document.getElementById("bookLink").href=b.url;
+ document.getElementById("bookText").innerHTML=b.lines.map(line=>line.split(" ").map(w=>{
+  let clean=w.replace(/[.,!?]/g,"");
+  return `<span class="clickword" onclick="translateWord('${clean.replace(/'/g,"\\'")}')">${w}</span>`;
+ }).join(" ")).join("<br>");
+}
+function translateWord(w){
+ document.getElementById("wordMeaning").textContent=w+" = "+(gloss[w.toLowerCase()]||"Belum ada arti ringkas. Buka kamus untuk definisi.");
+}
+function nextBook(){bookIndex=(bookIndex+1)%books.length;renderBook()}
+renderBook();
+
+// VOCABULARY: non-repeating shuffle bag + Wiktionary lookup
+const dictionary=[
+ ["accogliente","ramah / nyaman","aggettivo"],["affollato","ramai / penuh orang","aggettivo"],
+ ["allegro","ceria","aggettivo"],["amichevole","bersahabat","aggettivo"],
+ ["arrivare","tiba","verbo"],["ascoltare","mendengarkan","verbo"],
+ ["bellissimo","sangat indah","aggettivo"],["bisogno","kebutuhan","nome · il"],
+ ["camminare","berjalan kaki","verbo"],["cercare","mencari","verbo"],
+ ["chiacchierare","mengobrol","verbo"],["comodo","nyaman","aggettivo"],
+ ["curioso","penasaran / ingin tahu","aggettivo"],["decidere","memutuskan","verbo"],
+ ["divertente","menyenangkan","aggettivo"],["esperienza","pengalaman","nome · l'"],
+ ["finestra","jendela","nome · la"],["gentile","baik hati / sopan","aggettivo"],
+ ["incontrare","bertemu","verbo"],["insieme","bersama","avverbio"],
+ ["leggero","ringan","aggettivo"],["meraviglia","keajaiban","nome · la"],
+ ["passeggiata","jalan-jalan","nome · la"],["prendere","mengambil","verbo"],
+ ["quaderno","buku catatan","nome · il"],["raccontare","menceritakan","verbo"],
+ ["scegliere","memilih","verbo"],["sorridere","tersenyum","verbo"],
+ ["tranquillo","tenang","aggettivo"],["viaggiare","bepergian","verbo"]
+];
+let bag=[],wordSet=[],wordSetNo=0,saved=JSON.parse(localStorage.getItem("italianSavedWords")||"[]");
+function refillBag(){
+ bag=[...dictionary];
+ for(let i=bag.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]]}
+}
+function newWordSet(){
+ if(bag.length<3)refillBag();
+ wordSet=bag.splice(0,3);wordSetNo++;
+ document.getElementById("wordCounter").textContent="Set "+wordSetNo;
+ renderWords();
+}
+function renderWords(){
+ const html=wordSet.map((w,i)=>`<div class="word-card">
+ <div class="word">${w[0]}</div><div class="word-meta">${w[2]}</div>
+ <div>${w[1]}</div>
+ <button class="btn secondary" onclick="saveWord('${w[0]}')">♡ Save</button>
+ <button class="btn" onclick="lookupWord('${w[0]}')">Dictionary ↗</button>
+ <div class="small" id="lookup-${i}"></div></div>`).join("");
+ document.getElementById("vocabGrid").innerHTML=html;
+ document.getElementById("dashboardWords").innerHTML=html;
+}
+async function lookupWord(word){
+ const box=[...document.querySelectorAll(".word-card")].find(c=>c.querySelector(".word")?.textContent===word);
+ const output=box?.querySelector(".small:last-child");
+ if(output)output.textContent="Mencari definisi Wiktionary...";
+ try{
+  const r=await fetch("https://it.wiktionary.org/api/rest_v1/page/definition/"+encodeURIComponent(word));
+  if(!r.ok)throw new Error("No entry");
+  const data=await r.json();
+  const defs=(data.it||[]).flatMap(x=>x.definitions||[]).slice(0,2).map(x=>x.definition.replace(/<[^>]*>/g,""));
+  if(output)output.textContent=defs.length?defs.join(" · "):"Definisi belum ditemukan. Coba buka halaman Wiktionary.";
+ }catch(e){
+  if(output)output.textContent="Koneksi kamus tidak tersedia. Buka Wiktionary secara langsung.";
+ }
+ window.open("https://it.wiktionary.org/wiki/"+encodeURIComponent(word),"_blank","noopener");
+}
+function saveWord(word){
+ if(!saved.includes(word)){saved.push(word);localStorage.setItem("italianSavedWords",JSON.stringify(saved))}
+ alert(word+" tersimpan di daftar review!");
+}
+function showSavedWords(){
+ document.getElementById("savedWords").textContent=saved.length?"Saved words: "+saved.join(", "):"Belum ada kata yang disimpan.";
+}
+newWordSet();
+
+// ASSIGNMENTS + BASIC GRAMMAR REVIEW
+const submissions=JSON.parse(localStorage.getItem("italianSubmissions")||"[]");
+const nouns={
+ libro:{gender:"m",article:["il","lo","un"]},ragazza:{gender:"f",article:["la","una"]},
+ ragazzo:{gender:"m",article:["il","lo","un"]},casa:{gender:"f",article:["la","una"]},
+ amico:{gender:"m",article:["l'","un"]},amica:{gender:"f",article:["l'","un'"]},
+ studente:{gender:"m",article:["lo","uno"]},studentessa:{gender:"f",article:["la","una"]},
+ scuola:{gender:"f",article:["la","una"]},gatto:{gender:"m",article:["il","lo","un"]},
+ cane:{gender:"m",article:["il","lo","un"]},fiore:{gender:"m",article:["il","lo","un"]},
+ macchina:{gender:"f",article:["la","una"]},acqua:{gender:"f",article:["l'"]},
+ pizza:{gender:"f",article:["la","una"]},giorno:{gender:"m",article:["il","un"]},
+ famiglia:{gender:"f",article:["la","una"]},libri:{gender:"m",article:["i","gli"]},
+ bambini:{gender:"m",article:["i","gli"]},amici:{gender:"m",article:["gli","i"]}
+};
+const verbForms={
+ essere:{io:"sono",tu:"sei",lui:"è",lei:"è",noi:"siamo",voi:"siete",loro:"sono"},
+ avere:{io:"ho",tu:"hai",lui:"ha",lei:"ha",noi:"abbiamo",voi:"avete",loro:"hanno"},
+ parlare:{io:"parlo",tu:"parli",lui:"parla",lei:"parla",noi:"parliamo",voi:"parlate",loro:"parlano"},
+ mangiare:{io:"mangio",tu:"mangi",lui:"mangia",lei:"mangia",noi:"mangiamo",voi:"mangiate",loro:"mangiano"},
+ andare:{io:"vado",tu:"vai",lui:"va",lei:"va",noi:"andiamo",voi:"andate",loro:"vanno"},
+ fare:{io:"faccio",tu:"fai",lui:"fa",lei:"fa",noi:"facciamo",voi:"fate",loro:"fanno"},
+ vivere:{io:"vivo",tu:"vivi",lui:"vive",lei:"vive",noi:"viviamo",voi:"vivete",loro:"vivono"}
+};
+function makeWordInputs(id){
+ document.getElementById(id+"Words").innerHTML=[0,1,2].map(i=>`
+ <div style="margin:12px 0"><b>Word / verbo ${i+1}</b>
+ <input type="text" id="${id}word${i}" placeholder="Contoh: mangiare">
+ <input type="text" id="${id}sentence${i}" placeholder="Tulis satu kalimat bahasa Italia..."></div>`).join("");
+}
+["speaking","listening","reading"].forEach(makeWordInputs);
+
+function checkSentence(sentence){
+ let issues=[],s=sentence.trim(),lower=s.toLowerCase();
+ if(!s){return ["Belum ada kalimat yang diisi."]}
+ if(!/^[A-ZÀ-Ý]/.test(s))issues.push("Mulai kalimat dengan huruf kapital.");
+ if(!/[.!?]$/.test(s))issues.push("Tambahkan tanda baca di akhir kalimat.");
+ if(/\s{2,}/.test(s))issues.push("Ada spasi ganda.");
+ if(/\b(il|lo|la|i|gli|le|un|uno|una)\s+([aeiouàèéìòù])/i.test(s))
+  issues.push("Periksa kemungkinan elisi artikel: misalnya l'amico atau un'amica. Tidak semua kata vokal otomatis memakai l'.");
+ if(/\b(il|lo|la|i|gli|le)\s+(ragazza|casa|scuola|famiglia|pizza|macchina)\b/i.test(s))
+  issues.push("Periksa gender artikel dan nomina feminin.");
+ if(/\b(la|le)\s+(libro|ragazzo|gatto|cane|giorno)\b/i.test(s))
+  issues.push("Periksa gender artikel dan nomina maskulin.");
+ if(/\b(il|lo|la)\s+(libri|bambini|amici)\b/i.test(s))
+  issues.push("Periksa bentuk jamak artikel: i / gli untuk nomina maskulin jamak.");
+ let subject=lower.match(/\b(io|tu|lui|lei|noi|voi|loro)\s+([a-zàèéìòù]+)\b/);
+ if(subject){
+  let pron=subject[1],verb=subject[2],found=false;
+  for(let [inf,forms] of Object.entries(verbForms)){
+   if(forms[pron]===verb){found=true;break}
+  }
+  let known=Object.values(verbForms).some(f=>Object.values(f).includes(verb));
+  if(known&&!found)issues.push("Kemungkinan ketidaksesuaian subjek dan konjugasi verba. Periksa bentuk untuk '"+pron+"'.");
+ }
+ if(/\b(io|tu|lui|lei|noi|voi|loro)\s+(essere|avere|andare|fare|mangiare|parlare)\b/i.test(s))
+  issues.push("Sepertinya kamu memakai infinitif setelah subjek. Periksa konjugasi verba.");
+ if(!issues.length)issues.push("Tidak ada masalah dasar yang terdeteksi. Tetap periksa makna dan konteks kalimat.");
+ return issues;
+}
+function reviewText(text){
+ let all=[];
+ text.split(/[.!?]+/).filter(x=>x.trim()).forEach((sentence,i)=>{
+  all.push({sentence:sentence.trim(),issues:checkSentence(sentence.trim())});
+ });
+ return all;
+}
+function renderReport(text){
+ const reports=reviewText(text);
+ return `<div class="result"><b>Grammar review · pemeriksaan dasar</b>`+
+ reports.map((r,i)=>`<div class="issue"><b>Kalimat ${i+1}:</b> ${escapeHTML(r.sentence)}
+ ${r.issues.map(x=>`<div class="${x.startsWith("Tidak")?"good":"warn"}">• ${escapeHTML(x)}</div>`).join("")}</div>`).join("")+
+ `<p class="small">Pemeriksaan otomatis ini berbasis aturan dan daftar kata terbatas. Ia belum memahami seluruh konteks, jadi hasilnya bukan penilaian grammar lengkap.</p></div>`;
+}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function submitAssignment(type){
+ let words=[0,1,2].map(i=>document.getElementById(type+"word"+i).value.trim());
+ let sentences=[0,1,2].map(i=>document.getElementById(type+"sentence"+i).value.trim());
+ if(words.some(x=>!x)||sentences.some(x=>!x)){alert("Isi ketiga kata dan ketiga kalimat terlebih dahulu.");return}
+ let text=sentences.join(". ");
+ let report=renderReport(text);
+ document.getElementById(type+"Result").innerHTML=report;
+ saveSubmission(type,words,sentences);
+ markDone(type);
+}
+function submitWriting(){
+ let text=document.getElementById("writingText").value.trim();
+ if(!text){alert("Tulis jawabanmu dulu.");return}
+ document.getElementById("writingResult").innerHTML=renderReport(text);
+ saveSubmission("writing",[],[text]);
+ markDone("writing");
+}
+function saveSubmission(type,words,sentences){
+ submissions.unshift({type,words,sentences,date:new Date().toLocaleString("id-ID")});
+ localStorage.setItem("italianSubmissions",JSON.stringify(submissions));
+ renderHistory();
+}
+function renderHistory(){
+ let el=document.getElementById("submissionHistory");
+ if(!submissions.length){el.textContent="Belum ada tugas yang dikumpulkan.";return}
+ el.innerHTML=submissions.map(s=>`<div class="issue"><b>${s.type.toUpperCase()}</b> · ${s.date}
+ <div class="small">${s.words.join(", ")}</div>
+ ${s.sentences.map(x=>"<p>"+escapeHTML(x)+"</p>").join("")}</div>`).join("");
+}
+renderHistory();
+updateProgress();
+</script>
+</body>
+</html>
